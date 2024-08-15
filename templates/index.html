@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Manager</title>
+</head>
+<body>
+    <h1>Status Manager</h1>
+    <div id="status-container"></div>
+    <div id="transition-container"></div>
+
+    <button id="reset-btn">Reset Configuration</button>
+
+    <script>
+        // Fetch statuses and transitions
+        function fetchStatuses() {
+            fetch('/statuses').then(response => response.json()).then(data => {
+                let container = document.getElementById('status-container');
+                container.innerHTML = '<h2>Statuses</h2><ul>' + data.map(status => '<li>' + status + '</li>').join('') + '</ul>';
+            });
+        }
+
+        function fetchTransitions() {
+            fetch('/transitions').then(response => response.json()).then(data => {
+                let container = document.getElementById('transition-container');
+                container.innerHTML = '<h2>Transitions</h2><ul>' + data.map(transition => '<li>' + transition + '</li>').join('') + '</ul>';
+            });
+        }
+
+        // Reset button
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            fetch('/statuses', { method: 'DELETE' }).then(fetchStatuses);
+            fetch('/transitions', { method: 'DELETE' }).then(fetchTransitions);
+        });
+
+        fetchStatuses();
+        fetchTransitions();
+    </script>
+</body>
+</html>
